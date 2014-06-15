@@ -2,7 +2,8 @@
 
 
 ## Loading and preprocessing the data
-```{r, echo=TRUE}
+
+```r
 setwd("C:/Users/Pete/Personal/Coursera/Reproduceable Research/Project1")
 data <- read.csv("activity.csv")
 ```
@@ -12,36 +13,57 @@ data <- read.csv("activity.csv")
 1. Make a histogram of the total number of steps taken each day
 2. Calculate and report the **mean** and **median** total number of steps taken per day
 
-```{r, fig.width=8, fig.height=4, echo=TRUE}
+
+```r
 stepsTotalPerDay <- tapply(data$steps, data$date, sum)
 hist(stepsTotalPerDay, breaks = 6, main = "Frequency of number of steps per day", 
     xlab = "Number of steps per day", ylab = "Frequency", col = "green")
 ```
 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
+
 **Mean** steps per day
-```{r, echo=TRUE}
+
+```r
 stepsMeanPerDay <- tapply(data$steps, data$date, mean, na.rm = T)
 mean(stepsTotalPerDay, na.rm = T)
 ```
 
+```
+## [1] 10766
+```
+
 **Median** steps per day
-```{r, echo=TRUE}
+
+```r
 median(stepsTotalPerDay, na.rm = T)
+```
+
+```
+## [1] 10765
 ```
 
 ## What is the average daily activity pattern?
 
 1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
-```{r, fig.width=8, fig.height=4, echo=TRUE}
+
+```r
 stepsMeanPerInterval <- tapply(data$steps, data$interval, mean, na.rm = T)
 plot(stepsMeanPerInterval, type = "l", main = ("Steps vs. Interval (daily average)"), 
     ylab = "Steps Taken", xlab = "Interval", col = "blue")
 ```
 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
+
 Interval with the maximum number of steps:
-```{r, echo=TRUE}
+
+```r
 seq(along = stepsMeanPerInterval)[stepsMeanPerInterval == max(stepsMeanPerInterval)]
+```
+
+```
+## [1] 104
 ```
 
 ## Imputing missing values
@@ -52,12 +74,18 @@ seq(along = stepsMeanPerInterval)[stepsMeanPerInterval == max(stepsMeanPerInterv
 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
 Number of **missing** data:
-```{r, echo=TRUE}
+
+```r
 sum(as.numeric(is.na(data$steps)))
 ```
 
+```
+## [1] 2304
+```
 
-```{r, fig.width=8, fig.height=4, echo=TRUE}
+
+
+```r
 # Get the steps mean per interval as a vector
 tmp_stepsMeanPerInterval <- as.vector(stepsMeanPerInterval)
 # Repeat it to be the same for each of the 61 days
@@ -85,29 +113,45 @@ hist(stepsTotalPerDay_NoMissing, breaks = 6, main = "Frequency of number of step
     xlab = "Number of steps per day", ylab = "Frequency", col = "green")
 ```
 
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+
 Mean total number of steps taken per day (**missing replaced by mean** for that interval):
-```{r, echo=TRUE}
+
+```r
 stepsMeanPerInterval_NoMissing <- tapply(data_NoMissing$steps, data_NoMissing$interval, 
     mean)
 mean(stepsTotalPerDay_NoMissing)
 ```
 
+```
+## [1] 10766
+```
+
 Median total number of steps taken per day (**missing replaced by mean** for that interval):
-```{r, echo=TRUE}
+
+```r
 median(stepsTotalPerDay_NoMissing)
 ```
 
+```
+## [1] 10766
+```
+
 Time series with **missing data replaced with mean**
-```{r, fig.width=8, fig.height=4, echo=TRUE}
+
+```r
 plot(stepsMeanPerInterval_NoMissing, type = "l", xlab = "Interval", ylab = "# of Steps", 
     main = "Steps vs. Interval (missing replaced with mean)",col = "blue")
 ```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 1. Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
-```{r, fig.width=8, fig.height=8, echo=TRUE}
+
+```r
 # Create a factor variable with two levels (weekday, weekend-day)
 tmpLT <- as.POSIXlt(data$date, format = "%Y-%m-%d")
 tmpWeekDays <- tmpLT$wday
@@ -133,3 +177,5 @@ with(data, {
 
 })
 ```
+
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
